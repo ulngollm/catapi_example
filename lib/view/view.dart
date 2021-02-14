@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http_test/model/cat.dart';
 import 'package:http_test/view/view_model.dart';
-import 'package:http_test/widget/card.dart';
-
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class View extends StatefulWidget {
   @override
@@ -13,7 +12,9 @@ class ViewState extends State<View> {
   ViewModel _viewModel;
   List<Cat> catList;
   List<Widget> _elements;
-  Function setList() {}
+
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: true);
 
   @override
   void initState() {
@@ -22,26 +23,34 @@ class ViewState extends State<View> {
     res.then((value) => _elements = value);
   }
 
+  void _onRefresh() async {
+    print('refresh');
+    _elements = await _viewModel.getWidgetList();
+    _refreshController.refreshCompleted();
+    setState(() {});
+  }
+
+  void _onLoading() async {
+    _elements = await _viewModel.getWidgetList();
+    print('loading');
+    setState(() {});
+    _refreshController.loadComplete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: _viewModel.isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : ListView(
-                children: _elements,
-              ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.refresh),
-        onPressed: () async {
-          print('presetState');
-          _elements = await _viewModel.getWidgetList();
-          
-        },
-      ),
+          child: SmartRefresher(
+        controller: _refreshController,
+        header: ClassicHeader(),
+        // enablePullUp: true,
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
+        child: ListView(
+          children: _elements,
+        ),
+      )),
     );
   }
 }
