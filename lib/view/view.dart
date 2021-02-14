@@ -47,8 +47,11 @@ class ViewState extends State<View> {
         // enablePullUp: true,
         onRefresh: _onRefresh,
         onLoading: _onLoading,
-        child: ListView(
-          children: _elements,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25),
+          child: ListView(
+            children: _elements,
+          ),
         ),
       )),
     );
