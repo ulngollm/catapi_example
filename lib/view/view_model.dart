@@ -12,6 +12,7 @@ class ViewModel {
   Future<List<Cat>> getCats() async {
     final result = await CatApi.getCatsList();
     if (result != null) {
+      print(result);
       return Cat.listFromJson(result);
     }
   }
@@ -19,7 +20,7 @@ class ViewModel {
     isLoading = true;
     List<Cat> catsList = await getCats();
     isLoading = false;
-    return catsList.map<Widget>((element) => CatCard(element.url)).toList();
+    return catsList.map<Widget>((element) => CatCard.fromObject(element)).toList();
   }
 }
   
