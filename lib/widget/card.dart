@@ -22,60 +22,39 @@ class CatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 2,
-            offset: Offset(0.0, 2.0),
-          ),
-        ],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          children: [
-            Container(
-              // color: Colors.white,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+    return Card(
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              Container(
+                height: 200,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
-              child: Stack(
-                children: [
-                  Container(
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => Detail(link)));
+                },
+                child: FadeInImage.memoryNetwork(
                     height: 200,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => Detail(link)));
-                    },
-                    child: FadeInImage.memoryNetwork(
-                        height: 200,
-                        width: MediaQuery.of(context).size.width,
-                        placeholder: kTransparentImage,
-                        image: link,
-                        fit: BoxFit.cover),
-                  ),
-                ],
+                    width: MediaQuery.of(context).size.width,
+                    placeholder: kTransparentImage,
+                    image: link,
+                    fit: BoxFit.cover),
               ),
-            ),
-            Divider(),
-            FlatButton(
-              child: Text(link),
-              textColor: Theme.of(context).primaryColor,
-              onPressed: () {
-                _launchUrl(link);
-              },
-            )
-          ],
-        ),
+            ],
+          ),
+          FlatButton(
+            child: Text(link, overflow: TextOverflow.ellipsis, maxLines: 1),
+            textColor: Theme.of(context).primaryColor,
+            onPressed: () {
+              _launchUrl(link);
+            },
+          )
+        ],
       ),
     );
   }
